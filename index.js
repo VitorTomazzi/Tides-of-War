@@ -109,23 +109,56 @@ let fighter = new Character(75, 75, 9, 2);
 
 
 let board = document.getElementsByClassName('gameboard')[0];
-let cells = document.getElementsByClassName('col')
-let warP = '&#9876';
+let cells = document.querySelectorAll('.col')
 
-let from;
-// 
-Array.from(cells).forEach(function(cell){
-    cell[i].onclick = function(elem){
-        if (elem.target.innerHTML === warP) {
-            from = elem.target;
-        } else if (from && is)
-    }
+const pieces = {
+    warPiece: '&#9876',
+    solPiece: '&#x1F6E1', //placeholder
+    fightPiece: 'ffff' //placeholder
 }
 
-// click listener on each cell
-// if cell is clicked and warrior piece is on the cell ask options - can do with alerts initially with a prompt w/ instructions
+// loop through all cells and add a click listener on each cell
+// if cell is clicked check if piece is on there.
+//     if so piece can be moved?
+//     if not do nothing
+//     and if warrior piece is on the cell ask options - can do with alerts initially with a prompt w/ instructions
 // if move is selected, pick up warrior and move to surrounding cell
 // change the innerHTML from one cell to another
+
+let clickedPiece;
+
+let turns = 1
+
+cells.forEach(function (element) {
+    element.addEventListener('click', function (elem) {
+        // console.log(elem, elem.target.innerHTML);
+        if (elem.target.innerHTML !== '') { //and does not equal any other pieces
+            clickedPiece = elem.target.innerHTML
+            elem.target.innerHTML = ''
+            // console.log(clickedPiece)
+        } else if (elem.target.innerHTML === '') {
+            elem.target.innerHTML = clickedPiece;
+            clickedPiece = ''
+            // switch turns 
+            turns++
+            // console.log(clickedPiece)
+        }
+    })
+});
+
+// check if piece is selected
+// if (elem.target.innerHTML === pieces.warPiece) {
+//     clickedPiece = elem.target;
+//     // put piece in different square 
+//     elem.target.innerHTML = pieces.warPiece;
+//     // remove it from old square 
+//     clickedPiece.innerHTML = '';
+//     // clear clickedPiece so you can move another 
+//     clickedPiece = null
+
+// } else {return}
+
+
 
 
 
