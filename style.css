@@ -1,0 +1,9 @@
+.gameboard {
+    margin-top: 70px;
+
+}
+.col {
+    border: .5px solid black;
+    padding: 50px;
+    text-align: center;
+}
