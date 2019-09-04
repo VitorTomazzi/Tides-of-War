@@ -86,13 +86,13 @@
 
 
 class Character {
-    constructor(health, hit, strength, armor) {
+    constructor(health, hit, strength, armor, pieceCode) {
         // this.name = name;
         this.health = health; //life
         this.hit = hit; //determines chance that attack will land
         this.strength = strength; //determines how many dice will be rolled for damage calculations
         this.armor = armor; //gets subtracted from damage to decrease damage done to health
-        // this.pieceCode = pieceCode
+        this.pieceCode = pieceCode
     }
     // attack(enemy) {
     //     // if you want to implement dexterity you do it here with *** let hitPerc = (this.hit - enemy.dex) / 100;
@@ -114,8 +114,8 @@ class Character {
     // }
 }
 
-let warrior = new Character(100, 40, 9, 2); //player 1 for now
-let soldier = new Character(150, 60, 3, 7); // player 2 for now
+let warrior = new Character(100, 40, 9, 2, '&#9876'); //player 1 for now
+let soldier = new Character(150, 60, 3, 7, '&#x1F6E1'); // player 2 for now
 // let fighter = new Character(75, 75, 9, 2);
 
 
@@ -126,7 +126,7 @@ function printToScreen() {
 
 function fight() {
     let fightButton = document.getElementById('fight-button');
-    let restartButton = document.getElementById('restart-button');
+    // let restartButton = document.getElementById('restart-button');
     let gameMessage = document.getElementById('game-message');
 
     warriorAttack();
@@ -208,11 +208,58 @@ printToScreen();
 
 
 
+let id = 0
+
+function createBoard() {
+    let board = document.getElementById('gameboard');
+
+    for(let r=0; r < 5; r++){
+        let row = document.createElement('div');
+        row.setAttribute('class', 'row');
+
+        for(let c=0; c<5; c++){
+            let cell = document.createElement('div');
+            cell.setAttribute('class', 'cell');
+            cell.id = id;
+            row.appendChild(cell);
+            if(r === 0){
+                cell.innerHTML = id++; //just to lable each cell
+            }
+
+
+        }
+
+    board.appendChild(row);
+    }
+}
 
 
 
+// let array = [
+//     [0,0,0,0,0],
+//     [0,0,0,0,0],
+//     [0,1,0,0,0],
+//     [0,0,0,0,0],
+//     [0,0,0,0,0]
+// ]
 
+// cell is 128 by 128
 
+function xy2i(x,y) {
+    return y * mapwidth + x
+}
+
+function i2xy(i) {
+    return [i%mapWidth, Math.floor(i/mapWidth)]
+}
+
+// array[3][2].innerText = `&#9876`;
+
+createBoard()
+
+// link html and array so that i can manipulate array and it appears on HTML 
+// create function for click event on each div or img tag
+// create function to check if neighbors around = basically anything thats not zero
 
 
 
@@ -220,7 +267,7 @@ printToScreen();
 
 
 let board = document.getElementsByClassName('gameboard')[0];
-let cells = document.querySelectorAll('.col')
+let cells = document.querySelectorAll('.cell')
 
 const pieces = {
     warPiece: '&#9876',
@@ -228,13 +275,13 @@ const pieces = {
     // fightPiece: 'ffff' //placeholder
 }
 
-// loop through all cells and add a click listener on each cell
-// if cell is clicked check if piece is on there.
-//     if so piece can be moved?
-//     if not do nothing
-//     and if warrior piece is on the cell ask options - can do with alerts initially with a prompt w/ instructions
-// if move is selected, pick up warrior and move to surrounding cell
-// change the innerHTML from one cell to another
+// // loop through all cells and add a click listener on each cell
+// // if cell is clicked check if piece is on there.
+// //     if so piece can be moved?
+// //     if not do nothing
+// //     and if warrior piece is on the cell ask options - can do with alerts initially with a prompt w/ instructions
+// // if move is selected, pick up warrior and move to surrounding cell
+// // change the innerHTML from one cell to another
 
 let clickedPiece;
 
@@ -242,12 +289,13 @@ let turns = 1
 
 cells.forEach(function (element) {
     element.addEventListener('click', function (elem) {
-        // console.log(elem, elem.target.innerHTML);
-        if (elem.target.innerHTML !== '') { //and does not equal any other pieces
+        console.log(elem, elem.target.innerHTML);
+        if (elem.target.innerHTML !== '') { //and does not equal any other pieces &&& this is one of my neighbots
             clickedPiece = elem.target.innerHTML
             elem.target.innerHTML = ''
+            //movingColor();
             findNeighbors('before')
-
+            $('.cell').removeAttr('id')
             elem.target.setAttribute('id', '');
 
             // console.log(clickedPiece)
@@ -255,6 +303,7 @@ cells.forEach(function (element) {
             elem.target.innerHTML = clickedPiece;
             elem.target.setAttribute('id', 'moving');
             clickedPiece = ''
+            //movingColor();
             findNeighbors('after')
 
             // switch turns 
@@ -266,7 +315,8 @@ cells.forEach(function (element) {
 
 function findNeighbors(when) {
 
-    let columns = document.querySelectorAll('.col')
+    //let columns = document.querySelectorAll('cell')
+    let columns = cells;
     let activeColumn;
     columns.forEach((col, i) => {
         console.log(col.className, col.id, col.innerHTML)
@@ -275,6 +325,27 @@ function findNeighbors(when) {
         }
     })
 
-    console.log(when, 'neighbors are ', columns[activeColumn + 1], columns[activeColumn - 1], columns[activeColumn + 5], columns[activeColumn - 5])
+    let actives = []
+    if((activeColumn + 1) % 5 !== 0){
+         actives.push(columns[activeColumn + 1])
+    } 
+
+    if(activeColumn % 5 !== 0){
+        actives.push(columns[activeColumn - 1])
+    }
+
+    if(activeColumn < 20) {
+        actives.push(columns[activeColumn + 5])
+    }
+
+    if(activeColumn > 6){
+        actives.push(columns[activeColumn - 5])
+    }
+    console.log(when, 'neighbors are ', actives)
 
 }
+
+// function movingColor () {
+//     let movingElement = document.getElementById('moving');
+//     movingElement.classList.toggle('moving-color');
+// }
