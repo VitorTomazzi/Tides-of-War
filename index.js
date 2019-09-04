@@ -75,7 +75,7 @@
 
 
 class Character {
-    constructor(health, hit, strength, armor, pieceCode) {
+    constructor(health, hit, strength, armor) {
         // this.name = name;
         this.health = health; //life
         this.hit = hit; //determines chance that attack will land
@@ -83,29 +83,95 @@ class Character {
         this.armor = armor; //gets subtracted from damage to decrease damage done to health
         // this.pieceCode = pieceCode
     }
-    attack(enemy) {
-        // if you want to implement dexterity you do it here with *** let hitPerc = (this.hit - enemy.dex) / 100;
-        let hitPerc = this.hit / 100;
-        // if loop for calculating damage done and health after attack
-        if (Math.random() < hitPerc) {
-            damage = 0;
-            damage += (Math.floor(Math.random() * 6 + 1)) * this.strength;
-            damage -= enemy.armor;
-            enemy.health -= damage;
-            if (enemy.hp <= 0) {
-                alert(`You defeated the opposing ${enemy.name}!!!`);
-                // **** remove enemy sprite from game screen
-            } //ends enemy dead check
-        } //ends hit check
-    } //ends attack
-    move() {
+    // attack(enemy) {
+    //     // if you want to implement dexterity you do it here with *** let hitPerc = (this.hit - enemy.dex) / 100;
+    //     let hitPerc = this.hit / 100;
+    //     // if loop for calculating damage done and health after attack
+    //     if (Math.random() < hitPerc) {
+    //         damage = 0;
+    //         damage += (Math.floor(Math.random() * 6 + 1)) * this.strength;
+    //         damage -= enemy.armor;
+    //         enemy.health -= damage;
+    //         if (enemy.hp <= 0) {
+    //             alert(`You defeated the opposing ${enemy.name}!!!`);
+    //             // **** remove enemy sprite from game screen
+    //         } //ends enemy dead check
+    //     } //ends hit check
+    // } //ends attack
+    // move() {
 
-    }
+    // }
 }
 
-let warrior = new Character(100, 40, 7, 5);
-let soldier = new Character(150, 60, 3, 8);
-let fighter = new Character(75, 75, 9, 2);
+let warrior = new Character(100, 40, 9, 2); //player 1 for now
+let soldier = new Character(150, 60, 3, 7); // player 2 for now
+// let fighter = new Character(75, 75, 9, 2);
+
+// Select Player function? Would need to change all warriors/soldiers to player/opponent 
+// and include if statement about choosing class
+
+function printToScreen() {
+    document.getElementById('warrior-health').innerText = warrior.health;
+    document.getElementById('soldier-health').innerText = soldier.health;
+}
+
+function fight() {
+    let fightButton = document.getElementById('fight-button');
+    let gameMessage = document.getElementById('game-message');
+
+    warriorAttack();
+    
+    fightButton.disabled = true;
+
+    gameMessage.innerText = 'Soldier will attack now'
+    setTimeout(() => {
+        soldierAttack();
+        printToScreen();
+        fightButton.disabled = false;
+        gameMessage.innerText = 'Warrior will attack now'
+    }, 750)
+
+}
+
+function warriorAttack() {
+    let hitPerc = warrior.hit / 100;
+    // if loop for calculating damage done and health after attack
+    if (Math.random() < hitPerc) {
+        let warriorDamage = (Math.floor(Math.random() * 6 + 1)) * warrior.strength;
+        warriorDamage -= soldier.armor;
+        soldier.health -= warriorDamage;
+        console.log(`Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`);
+    } else {
+        console.log('Warrior missed')
+    }
+    printToScreen();
+}
+
+function soldierAttack() {
+    let hitPerc = soldier.hit / 100;
+    // if loop for calculating damage done and health after attack
+    if (Math.random() < hitPerc) {
+        let soldierDamage = (Math.floor(Math.random() * 6 + 1)) * soldier.strength;
+        soldierDamage -= warrior.armor;
+        warrior.health -= soldierDamage;
+        console.log(`Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`);
+    } else {
+        console.log('Soldier missed')
+    }
+    printToScreen();
+}
+
+
+printToScreen();
+
+
+
+
+
+
+
+
+
 
 
 let board = document.getElementsByClassName('gameboard')[0];
@@ -114,7 +180,7 @@ let cells = document.querySelectorAll('.col')
 const pieces = {
     warPiece: '&#9876',
     solPiece: '&#x1F6E1', //placeholder
-    fightPiece: 'ffff' //placeholder
+    // fightPiece: 'ffff' //placeholder
 }
 
 // loop through all cells and add a click listener on each cell
@@ -145,66 +211,3 @@ cells.forEach(function (element) {
         }
     })
 });
-
-// check if piece is selected
-// if (elem.target.innerHTML === pieces.warPiece) {
-//     clickedPiece = elem.target;
-//     // put piece in different square 
-//     elem.target.innerHTML = pieces.warPiece;
-//     // remove it from old square 
-//     clickedPiece.innerHTML = '';
-//     // clear clickedPiece so you can move another 
-//     clickedPiece = null
-
-// } else {return}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let state = false //false if no piece has been selected
-// let currentPiece;
-// let currentCell;
-
-// let cells = document.getElementsByTagName("span");
-// for (var i = 0; i < cells.length; i++) {
-//     cells[i].onclick = function () {
-//         getCell(this);
-//     };
-// }
-
-// function getCell(that) {
-//     if (!state) { //this means if the state is false (i.e. no piece selected
-//         state = true; //piece has been selected
-//         currentPiece = that.innerHTML; //get the current piece selected
-//         currentCell = that; //get the current cell selection
-//     } else { //else, you are moving a piece
-//         that.innerHTML = currentPiece; //Set the selected space to the piece that was grabbed
-//         currentCell.innerHTML = ""; //remove the piece from its old location
-//         state = false; //piece has been placed, so set state back to false
-//     }
-// }
