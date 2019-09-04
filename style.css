@@ -7,3 +7,32 @@
     padding: 30px;
     text-align: center;
 }
+
+.jumbotron {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;;
+    color: white;
+    height: 55vh; /* this may need to change later */
+}
+
+.jumbotron div:nth-child(1) {
+    /* border: 1px solid white; */
+    text-align: center;
+    padding: 50px;
+}
+
+#fight-button {
+    border-radius: 2px;
+    border-color: red;
+    background-color: red;
+    font-size: 20px;
+}
+
+#restart-button {
+    border-radius: 2px;
+    background-color: lightblue;
+    border-color: lightblue;
+    font-size: 20px;
+}

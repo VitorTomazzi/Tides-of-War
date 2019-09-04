@@ -26,16 +26,16 @@
             <div class='col'></div>
         </div>
         <div class='row'>
+            <div class='col player1'> &#9876 </div>
             <div class='col'></div>
-            <div class='col'> &#x1F6E1 </div>
-            <div class='col'></div>
+            <div class='col player1'> &#9876 </div>
             <div class='col'></div>
             <div class='col'></div>
         </div>
         <div class='row'>
             <div class='col'></div>
-            <div class='col'></div>
-            <div class='col'></div>
+            <div class='col player1'> &#9876 </div>
+            <div  id="moving" class='col player2'> &#x1F6E1</div>
             <div class='col'></div>
             <div class='col'></div>
         </div>
@@ -56,10 +56,17 @@
     </div>
 
     <div class='container jumbotron'>
-        <h3> &#9876 Warrior Health : <span id='warrior-health'></span></h3>
-        <h3> &#x1F6E1 Soldier Health : <span id='soldier-health'></span></h3>
-        <button id='fight-button' onclick='fight()'> Fight </button>
-        <h3 id='game-message'></h3>
+        <div>
+            <h3> &#9876 Warrior Health: <span id='warrior-health'></span></h3>
+            <h3> &#x1F6E1 Soldier Health: <span id='soldier-health'></span></h3>
+            <button id='fight-button' onclick='fight()'> Fight </button>
+            <button id='restart-button' hidden='true' onclick='restart()'> Play Again? </button>
+            <h3 id='game-message'></h3>
+        </div>
+        <div>
+            <h3 id='log'></h3>
+        </div>
+
     </div>
 
 

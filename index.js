@@ -74,6 +74,17 @@
 // next players turn
 
 
+// ************* ideas **************
+// - during battle have fight simulation going on screen.
+//  instead of clicking fight each time just have an auto timer going
+// - Select Player function? Would need to change all warriors/soldiers to player/opponent 
+//  and include if statement about choosing class
+
+
+
+
+
+
 class Character {
     constructor(health, hit, strength, armor) {
         // this.name = name;
@@ -107,8 +118,6 @@ let warrior = new Character(100, 40, 9, 2); //player 1 for now
 let soldier = new Character(150, 60, 3, 7); // player 2 for now
 // let fighter = new Character(75, 75, 9, 2);
 
-// Select Player function? Would need to change all warriors/soldiers to player/opponent 
-// and include if statement about choosing class
 
 function printToScreen() {
     document.getElementById('warrior-health').innerText = warrior.health;
@@ -117,52 +126,88 @@ function printToScreen() {
 
 function fight() {
     let fightButton = document.getElementById('fight-button');
+    let restartButton = document.getElementById('restart-button');
     let gameMessage = document.getElementById('game-message');
 
     warriorAttack();
-    
+    gameMessage.innerText = 'Soldier will attack now'
+
+    if (isGameOver(soldier.health)) {
+        endGame(`Warrior has killed the Soldier`)
+        return;
+    }
+
     fightButton.disabled = true;
 
-    gameMessage.innerText = 'Soldier will attack now'
     setTimeout(() => {
         soldierAttack();
-        printToScreen();
         fightButton.disabled = false;
         gameMessage.innerText = 'Warrior will attack now'
-    }, 750)
 
+        if (isGameOver(warrior.health)) {
+            endGame(`Soldier has killed the Warrior`)
+            return;
+        }
+    }, 1000)
 }
 
 function warriorAttack() {
+    logMessage = document.getElementById('log')
+
     let hitPerc = warrior.hit / 100;
     // if loop for calculating damage done and health after attack
     if (Math.random() < hitPerc) {
         let warriorDamage = (Math.floor(Math.random() * 6 + 1)) * warrior.strength;
         warriorDamage -= soldier.armor;
         soldier.health -= warriorDamage;
-        console.log(`Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`);
+        logMessage.innerText = `Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`
+        // console.log(`Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`);
     } else {
-        console.log('Warrior missed')
+        logMessage.innerText = 'Warrior missed'
+        // console.log('Warrior missed')
     }
     printToScreen();
 }
 
 function soldierAttack() {
+    logMessage = document.getElementById('log')
+
     let hitPerc = soldier.hit / 100;
     // if loop for calculating damage done and health after attack
     if (Math.random() < hitPerc) {
         let soldierDamage = (Math.floor(Math.random() * 6 + 1)) * soldier.strength;
         soldierDamage -= warrior.armor;
         warrior.health -= soldierDamage;
-        console.log(`Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`);
+        logMessage.innerText = `Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`
+
+        // console.log(`Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`);
     } else {
-        console.log('Soldier missed')
+        logMessage.innerText = 'Soldier missed';
+        // console.log('Soldier missed')
     }
     printToScreen();
 }
 
+// returns a boolean: true is health reaches zero or less
+function isGameOver(health) {
+    return health <= 0;
+};
 
+function endGame(message) {
+    document.getElementById('game-message').innerText = message;
+    document.getElementById('restart-button').hidden = false;
+    document.getElementById('fight-button').hidden = true;
+}
+
+function restart () {
+    document.location.href = '';
+}
+
+// need to call print to screen here to display inital health and emojis
 printToScreen();
+
+
+
 
 
 
@@ -201,13 +246,35 @@ cells.forEach(function (element) {
         if (elem.target.innerHTML !== '') { //and does not equal any other pieces
             clickedPiece = elem.target.innerHTML
             elem.target.innerHTML = ''
+            findNeighbors('before')
+
+            elem.target.setAttribute('id', '');
+
             // console.log(clickedPiece)
         } else if (elem.target.innerHTML === '') {
             elem.target.innerHTML = clickedPiece;
+            elem.target.setAttribute('id', 'moving');
             clickedPiece = ''
+            findNeighbors('after')
+
             // switch turns 
             turns++
             // console.log(clickedPiece)
         }
     })
 });
+
+function findNeighbors(when) {
+
+    let columns = document.querySelectorAll('.col')
+    let activeColumn;
+    columns.forEach((col, i) => {
+        console.log(col.className, col.id, col.innerHTML)
+        if (col.id == "moving") {
+            activeColumn = i;
+        }
+    })
+
+    console.log(when, 'neighbors are ', columns[activeColumn + 1], columns[activeColumn - 1], columns[activeColumn + 5], columns[activeColumn - 5])
+
+}
