@@ -92,6 +92,7 @@ class Character {
         this.hit = hit; //determines chance that attack will land
         this.strength = strength; //determines how many dice will be rolled for damage calculations
         this.armor = armor; //gets subtracted from damage to decrease damage done to health
+        // this.image.src = image;
         this.pieceCode = pieceCode
     }
     // attack(enemy) {
@@ -114,8 +115,13 @@ class Character {
     // }
 }
 
-let warrior = new Character(100, 40, 9, 2, '&#9876'); //player 1 for now
-let soldier = new Character(150, 60, 3, 7, '&#x1F6E1'); // player 2 for now
+// '&#x1F6E1'
+// './PNG/Warrior.png'
+// './PNG/Soldier.png'
+// '&#9876'
+
+let warrior = new Character(100, 40, 9, 2, './PNG/Warrior.png'); //player 1 for now
+let soldier = new Character(150, 60, 3, 7, './PNG/Soldier.png'); // player 2 for now
 // let fighter = new Character(75, 75, 9, 2);
 
 
@@ -219,14 +225,22 @@ function createBoard() {
 
         for(let c=0; c<5; c++){
             let cell = document.createElement('div');
+            let theImage = document.createElement('img')
             cell.setAttribute('class', 'cell');
             cell.id = id;
             row.appendChild(cell);
             if(r === 0){
-                cell.innerHTML = id++; //just to lable each cell
+                // cell.innerHTML = warrior.pieceCode; //just to lable each cell. later this becomes the game pieces
+                cell.appendChild(theImage)
+                theImage.src = warrior.pieceCode;
+                theImage.width = "100";
             }
-
-
+            if(r === 4){
+                // cell.innerHTML = soldier.pieceCode; //just to lable each cell. later this becomes the game pieces
+                cell.appendChild(theImage)
+                theImage.src = soldier.pieceCode;
+                theImage.width = "100";
+            }
         }
 
     board.appendChild(row);
@@ -267,7 +281,7 @@ createBoard()
 
 
 let board = document.getElementsByClassName('gameboard')[0];
-let cells = document.querySelectorAll('.cell')
+let cells = document.querySelectorAll('img')
 
 const pieces = {
     warPiece: '&#9876',
