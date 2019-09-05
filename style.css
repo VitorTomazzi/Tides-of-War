@@ -46,6 +46,27 @@
     flex-direction: column;
 }
 
+img#moving {
+    animation:  shake 1s infinite;
+}
+
+img[name=legal]{
+    background-color: blue;
+}
+
+img[data=war]{
+    background-color:red;
+}
+
+
+@keyframes shake {
+    0%{
+        transform:rotate(10deg)
+    }
+    50%{
+        transform:rotate(-10deg)
+    }
+}
 /* img {
     width: 128px;
     height: 128px;
