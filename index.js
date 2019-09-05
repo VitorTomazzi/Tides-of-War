@@ -57,10 +57,10 @@ function warriorAttack() {
         warriorDamage -= soldier.armor;
         soldier.health -= warriorDamage;
         logMessage.innerText = `Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`
-        // console.log(`Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`);
+        // //console.log(`Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`);
     } else {
         logMessage.innerText = 'Warrior missed'
-        // console.log('Warrior missed')
+        // //console.log('Warrior missed')
     }
     printToScreen();
 }
@@ -76,10 +76,10 @@ function soldierAttack() {
         warrior.health -= soldierDamage;
         logMessage.innerText = `Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`
 
-        // console.log(`Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`);
+        // //console.log(`Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`);
     } else {
         logMessage.innerText = 'Soldier missed';
-        // console.log('Soldier missed')
+        // //console.log('Soldier missed')
     }
     printToScreen();
 }
@@ -131,6 +131,10 @@ function createBoard() {
                 theImage.setAttribute('alt', 'player2')
                 theImage.src = warrior.pieceCode;
                 theImage.width = "100";
+                //cell.innerHTML += '<span class="strength">5<span>  | <span class="health">50<span>'
+                theImage.setAttribute('strength', 50)
+                theImage.setAttribute('health', 500)
+
             }
             if (r === 4) {
                 // cell.innerHTML = soldier.pieceCode; //just to lable each cell. later this becomes the game pieces
@@ -139,13 +143,19 @@ function createBoard() {
                 theImage.setAttribute('alt', 'player1')
                 theImage.src = soldier.pieceCode;
                 theImage.width = "100";
+                theImage.setAttribute('health', 500)
+                theImage.setAttribute('strength', 50)
+
+
             }
             if (r > 0 && r < 4) {
                 theImage.setAttribute('class', 'grassImage')
                 theImage.setAttribute('alt', '')
                 theImage.src = grass;
                 theImage.width = "100";
+
             }
+
         }
         board.appendChild(row);
     }
@@ -191,71 +201,80 @@ function player2Turn(elem) {
 let middleOfTurn = false;
 
 function movePlayer(elem) {
-    console.log(elem, turn);
+    //console.log(elem, turn);
     middleOfTurn = true;
 
     if (elem.target.className === 'battleImage') { //and does not equal any other pieces &&& this is one of my neighbots
         clickedPiece = elem.target.src
-        // console.log(clickedPiece)
+        // //console.log(clickedPiece)
         elem.target.src = grass;
         elem.target.setAttribute('id', 'moving');
         elem.target.setAttribute('class', 'grassImage');
         $('.battleImage').removeAttr('id')
-        $('img').removeAttr('name')
+        $('img').removeAttr('name strength health data')
+
 
         let neighbors = findNeighbors('before') //weird one
-        neighbors.forEach(neighbor => {
-            console.log(neighbor)
-            if (neighbor.className == 'grassImage') {
-                neighbor.setAttribute('name', 'legal')
-            }
-        })
+        neighborOptions(neighbors, elem.target)
+   
+        
         elem.target.setAttribute('id', '');
         $('.grassImage').removeAttr('alt');
     } else if (elem.target.className !== 'battleImage' && clickedPiece != null && elem.target.className == 'grassImage' && elem.target.getAttribute('name') == 'legal') {
-        // console.log(clickedPiece)
+
         $('img').removeAttr('name')
         const altAttribute = turn % 2 == 0 ? "player2" : "player1";
         elem.target.src = clickedPiece;
         elem.target.setAttribute('id', 'moving');
         elem.target.setAttribute('class', 'battleImage');
         elem.target.setAttribute('alt', altAttribute);
+        elem.target.setAttribute('strength', '50')
+        elem.target.setAttribute('health', '500')
+        $('.battleImage').removeAttr('data')
+
+        // let neighbors = findNeighbors('after')
+        // fightNeighbor(neighbors, elem.target)
         clickedPiece = null;
 
-        let neighbors = findNeighbors('after')
-        fightNeighbor(neighbors)
         turn++
-        // $("#turn").html(turn)
+        $("#turn").html(turn)
         // middleOfTurn = false;
         console.log(turn)
     }
 }
 
-function fightNeighbor(neighbors) {
+function neighborOptions(neighbors, fighter) {
     $('.battleImage').removeAttr('data')
     neighbors.forEach(neighbor => {
-        console.log(neighbor)
-        if (neighbor.className == 'battleImage') {
+        if (neighbor.className == 'battleImage' && neighbor.alt !== fighter.alt) {
             neighbor.setAttribute('data', 'war')
-            fight();
+
+            battle(neighbor, fighter);
+        }
+        else if (neighbor.className == 'grassImage') {
+            neighbor.setAttribute('name', 'legal')
+            neighbor.setAttribute('strength', '50')
+            neighbor.setAttribute('health', '500')
         }
     })
 }
 
 
+function battle(neighbor, fighter) {
+    console.log(neighbor, fighter)
+}
+
 
 function findNeighbors(when) {
-
-    //let columns = document.querySelectorAll('cell')
     let columns = cells;
     let activeColumn;
     columns.forEach((col, i) => {
-        console.log(col.className, col.id, col.innerHTML)
+        //console.log(col.className, col.id, col.innerHTML)
         if (col.id == "moving") {
             activeColumn = i;
         }
     })
-    console.log('active column', activeColumn)
+    //console.log('active column', activeColumn)
 
     let actives = []
     if ((activeColumn + 1) % 5 !== 0) {
@@ -273,6 +292,6 @@ function findNeighbors(when) {
     if (activeColumn > 6) {
         actives.push(columns[activeColumn - 5])
     }
-    console.log(when, 'neighbors are ', actives)
+    //console.log(when, 'neighbors are ', actives)
     return actives
 }
