@@ -120,8 +120,10 @@ class Character {
 // './PNG/Soldier.png'
 // '&#9876'
 
+// Pieces
 let warrior = new Character(100, 40, 9, 2, './PNG/Warrior.png'); //player 1 for now
 let soldier = new Character(150, 60, 3, 7, './PNG/Soldier.png'); // player 2 for now
+let grass = './PNG/grass-png-cartoon.png'
 // let fighter = new Character(75, 75, 9, 2);
 
 
@@ -243,20 +245,20 @@ function createBoard() {
             if(r === 0){
                 // cell.innerHTML = warrior.pieceCode; //just to lable each cell. later this becomes the game pieces
                 // cell.appendChild(theImage)
-                theImage.setAttribute('class', 'cImage')
+                theImage.setAttribute('class', 'battleImage')
                 theImage.src = warrior.pieceCode;
                 theImage.width = "100";
             }
             if(r === 4){
                 // cell.innerHTML = soldier.pieceCode; //just to lable each cell. later this becomes the game pieces
                 // cell.appendChild(theImage)
-                theImage.setAttribute('class', 'cImage')
+                theImage.setAttribute('class', 'battleImage')
                 theImage.src = soldier.pieceCode;
                 theImage.width = "100";
             }
             if(r > 0 && r < 4){
-                theImage.setAttribute('class', 'cImage')
-                theImage.src = './PNG/grass-png-cartoon.png'
+                theImage.setAttribute('class', 'grassImage')
+                theImage.src = grass;
                 theImage.width = "100";
             }
         }
@@ -272,7 +274,7 @@ createBoard()
 
 
 let board = document.getElementsByClassName('gameboard')[0];
-let cells = document.querySelectorAll('.cImage')
+let cells = document.querySelectorAll('img')
 
 // const pieces = {
 //     warPiece: '&#9876',
@@ -281,30 +283,29 @@ let cells = document.querySelectorAll('.cImage')
 // }
 
 
-let clickedPiece;
+let clickedPiece = null;
 
 let turns = 1
 
 cells.forEach(function (element) {
     element.addEventListener('click', function (elem) {
-        console.log(elem, elem.target.src);
-        if (elem.target.src !== ' ') { //and does not equal any other pieces &&& this is one of my neighbots
+        // console.log(elem, elem.target.src);
+        if (elem.target.className === 'battleImage') { //and does not equal any other pieces &&& this is one of my neighbots
             clickedPiece = elem.target.src
             // console.log(clickedPiece)
-            elem.target.src = ''
-            //movingColor();
+            elem.target.src = grass;
+            elem.target.setAttribute('class', 'grassImage');
             findNeighbors('before')
-            $('.cImage').removeAttr('id')
+            $('.battleImage').removeAttr('id')
             elem.target.setAttribute('id', '');
 
-        } else if (elem.target.src === ' ') {
-            console.log(elem.target.src)
+        } else if (elem.target.className !== 'battleImage' && clickedPiece != null) {
+            // console.log(clickedPiece)
             elem.target.src = clickedPiece;
             elem.target.setAttribute('id', 'moving');
+            elem.target.setAttribute('class', 'battleImage');
             clickedPiece = ''
-            //movingColor();
             findNeighbors('after')
-            // console.log(clickedPiece)
 
             // switch turns 
             turns++
