@@ -214,6 +214,13 @@ printToScreen();
 
 
 
+
+//************************************* board logic ***********************************/
+
+
+
+
+
 let id = 0
 
 function createBoard() {
@@ -226,54 +233,38 @@ function createBoard() {
         for(let c=0; c<5; c++){
             let cell = document.createElement('div');
             let theImage = document.createElement('img')
+            // theImage.setAttribute('src', ' ')
             cell.setAttribute('class', 'cell');
-            cell.id = id;
+            cell.appendChild(theImage)
+
+
+            // cell.id = id;
             row.appendChild(cell);
             if(r === 0){
                 // cell.innerHTML = warrior.pieceCode; //just to lable each cell. later this becomes the game pieces
-                cell.appendChild(theImage)
+                // cell.appendChild(theImage)
+                theImage.setAttribute('class', 'cImage')
                 theImage.src = warrior.pieceCode;
                 theImage.width = "100";
             }
             if(r === 4){
                 // cell.innerHTML = soldier.pieceCode; //just to lable each cell. later this becomes the game pieces
-                cell.appendChild(theImage)
+                // cell.appendChild(theImage)
+                theImage.setAttribute('class', 'cImage')
                 theImage.src = soldier.pieceCode;
                 theImage.width = "100";
             }
+            if(r > 0 && r < 4){
+                theImage.setAttribute('class', 'cImage')
+                theImage.src = './PNG/grass-png-cartoon.png'
+                theImage.width = "100";
+            }
         }
-
     board.appendChild(row);
     }
 }
 
-
-
-// let array = [
-//     [0,0,0,0,0],
-//     [0,0,0,0,0],
-//     [0,1,0,0,0],
-//     [0,0,0,0,0],
-//     [0,0,0,0,0]
-// ]
-
-// cell is 128 by 128
-
-function xy2i(x,y) {
-    return y * mapwidth + x
-}
-
-function i2xy(i) {
-    return [i%mapWidth, Math.floor(i/mapWidth)]
-}
-
-// array[3][2].innerText = `&#9876`;
-
 createBoard()
-
-// link html and array so that i can manipulate array and it appears on HTML 
-// create function for click event on each div or img tag
-// create function to check if neighbors around = basically anything thats not zero
 
 
 
@@ -281,21 +272,14 @@ createBoard()
 
 
 let board = document.getElementsByClassName('gameboard')[0];
-let cells = document.querySelectorAll('img')
+let cells = document.querySelectorAll('.cImage')
 
-const pieces = {
-    warPiece: '&#9876',
-    solPiece: '&#x1F6E1', //placeholder
-    // fightPiece: 'ffff' //placeholder
-}
+// const pieces = {
+//     warPiece: '&#9876',
+//     solPiece: '&#x1F6E1', //placeholder
+//     // fightPiece: 'ffff' //placeholder
+// }
 
-// // loop through all cells and add a click listener on each cell
-// // if cell is clicked check if piece is on there.
-// //     if so piece can be moved?
-// //     if not do nothing
-// //     and if warrior piece is on the cell ask options - can do with alerts initially with a prompt w/ instructions
-// // if move is selected, pick up warrior and move to surrounding cell
-// // change the innerHTML from one cell to another
 
 let clickedPiece;
 
@@ -303,26 +287,27 @@ let turns = 1
 
 cells.forEach(function (element) {
     element.addEventListener('click', function (elem) {
-        console.log(elem, elem.target.innerHTML);
-        if (elem.target.innerHTML !== '') { //and does not equal any other pieces &&& this is one of my neighbots
-            clickedPiece = elem.target.innerHTML
-            elem.target.innerHTML = ''
+        console.log(elem, elem.target.src);
+        if (elem.target.src !== ' ') { //and does not equal any other pieces &&& this is one of my neighbots
+            clickedPiece = elem.target.src
+            // console.log(clickedPiece)
+            elem.target.src = ''
             //movingColor();
             findNeighbors('before')
-            $('.cell').removeAttr('id')
+            $('.cImage').removeAttr('id')
             elem.target.setAttribute('id', '');
 
-            // console.log(clickedPiece)
-        } else if (elem.target.innerHTML === '') {
-            elem.target.innerHTML = clickedPiece;
+        } else if (elem.target.src === ' ') {
+            console.log(elem.target.src)
+            elem.target.src = clickedPiece;
             elem.target.setAttribute('id', 'moving');
             clickedPiece = ''
             //movingColor();
             findNeighbors('after')
+            // console.log(clickedPiece)
 
             // switch turns 
             turns++
-            // console.log(clickedPiece)
         }
     })
 });

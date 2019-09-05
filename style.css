@@ -1,11 +1,6 @@
-.gameboard {
+#gameboard {
     margin-top: 10px;
 
-}
-.col {
-    border: .5px solid black;
-    padding: 30px;
-    text-align: center;
 }
 
 .jumbotron {
@@ -50,3 +45,13 @@
     align-items: center;
     flex-direction: column;
 }
+
+/* img {
+    width: 128px;
+    height: 128px;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+} */
