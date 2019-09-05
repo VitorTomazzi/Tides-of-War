@@ -204,7 +204,7 @@ function movePlayer(elem) {
     //console.log(elem, turn);
     middleOfTurn = true;
 
-    if (elem.target.className === 'battleImage') { //and does not equal any other pieces &&& this is one of my neighbots
+    if (elem.target.className === 'battleImage' && clickedPiece == null) { //and does not equal any other pieces &&& this is one of my neighbots
         clickedPiece = elem.target.src
         // //console.log(clickedPiece)
         elem.target.src = grass;
@@ -240,6 +240,10 @@ function movePlayer(elem) {
         $("#turn").html(turn)
         // middleOfTurn = false;
         console.log(turn)
+        console.log("Enemy");
+        
+    } else {
+        neighborOptions();
     }
 }
 
@@ -248,8 +252,8 @@ function neighborOptions(neighbors, fighter) {
     neighbors.forEach(neighbor => {
         if (neighbor.className == 'battleImage' && neighbor.alt !== fighter.alt) {
             neighbor.setAttribute('data', 'war')
-
-            battle(neighbor, fighter);
+            battle(neighbors, fighter);
+            
         }
         else if (neighbor.className == 'grassImage') {
             neighbor.setAttribute('name', 'legal')
@@ -262,6 +266,7 @@ function neighborOptions(neighbors, fighter) {
 
 function battle(neighbor, fighter) {
     console.log(neighbor, fighter)
+
 }
 
 
