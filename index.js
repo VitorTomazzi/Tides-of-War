@@ -30,56 +30,66 @@ class Character {
 
 
 // Pieces/Images
-let warrior = new Character(100, 100, 9, 2, './PNG/Warrior.png'); //player 1 for now
-let soldier = new Character(150, 100, 3, 7, './PNG/Soldier.png'); // player 2 for now
+let p2 = new Character(100, 100, 9, 2, './PNG/Warrior.png'); //player 2 for now
+let p1 = new Character(150, 100, 3, 7, './PNG/Soldier.png'); // player 1 for now
 let grass = './PNG/grass-png-cartoon.png'
 // let fighter = new Character(75, 75, 9, 2);
 
 
 function printToScreen() {
-    document.getElementById('warrior-health').innerText = warrior.health;
-    document.getElementById('soldier-health').innerText = soldier.health;
+    document.getElementById('warrior-health').innerText = p2.health;
+    document.getElementById('soldier-health').innerText = p1.health;
 }
 
-function fight() {
+function randomFight(elem) {
     // let restartButton = document.getElementById('restart-button');
-    warriorAttack();
-    soldierAttack();
+    p1Attack()
+    p2Attack()
+    if (isDead()) {
+
+    }
+
+    // gameMessage.innerText = 'Soldier will attack now'
+    // setTimeout(() => {
+    //     p2Attack();
+    //     printToScreen();
+    //     gameMessage.innerText = 'Player 2 will attack now'
+    // }, 750)
 }
 
-function warriorAttack() {
+function p2Attack() {
     logMessage = document.getElementById('log')
 
-    let hitPerc = warrior.hit / 100;
+    let hitPerc = p2.hit / 100;
     // if loop for calculating damage done and health after attack
     if (Math.random() < hitPerc) {
-        let warriorDamage = (Math.floor(Math.random() * 6 + 1)) * warrior.strength;
-        warriorDamage -= soldier.armor;
-        soldier.health -= warriorDamage;
-        logMessage.innerText = `Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`
-        // //console.log(`Warrior did ${warriorDamage} damage to soldier. ${soldier.health} health left!`);
+        let p2Damage = (Math.floor(Math.random() * 6 + 1)) * p2.strength;
+        p2Damage -= p1.armor;
+        p1.health -= p2Damage;
+        logMessage.innerText = `Player 2 did ${p2Damage} damage to Player 1. Only ${p1.health} health left!`
+        // //console.log(`Player 2 did ${p2Damage} damage to soldier. ${soldier.health} health left!`);
     } else {
-        logMessage.innerText = 'Warrior missed'
-        // //console.log('Warrior missed')
+        logMessage.innerText = 'Player 2 missed'
+        // //console.log('Player 2 missed')
     }
     printToScreen();
 }
 
-function soldierAttack() {
+function p1Attack() {
     logMessage = document.getElementById('log')
 
-    let hitPerc = soldier.hit / 100;
+    let hitPerc = p1.hit / 100;
     // if loop for calculating damage done and health after attack
     if (Math.random() < hitPerc) {
-        let soldierDamage = (Math.floor(Math.random() * 6 + 1)) * soldier.strength;
-        soldierDamage -= warrior.armor;
-        warrior.health -= soldierDamage;
-        logMessage.innerText = `Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`
+        let p1Damage = (Math.floor(Math.random() * 6 + 1)) * p1.strength;
+        p1Damage -= p2.armor;
+        p2.health -= p1Damage;
+        logMessage.innerText = `Player 1 did ${p1Damage} damage to Player 2. ${p2.health} health left!`
 
-        // //console.log(`Soldier did ${soldierDamage} damage to warrior. ${warrior.health} health left!`);
+        // //console.log(`Player 1 did ${p1Damage} damage to p2. ${p2.health} health left!`);
     } else {
-        logMessage.innerText = 'Soldier missed';
-        // //console.log('Soldier missed')
+        logMessage.innerText = 'Player 1 missed';
+        // //console.log('Player 1 missed')
     }
     printToScreen();
 }
@@ -129,26 +139,21 @@ function createBoard() {
                 // cell.appendChild(theImage)
                 theImage.setAttribute('class', 'battleImage')
                 theImage.setAttribute('alt', 'player2')
-                theImage.src = warrior.pieceCode;
+                theImage.src = p2.pieceCode;
                 theImage.width = "100";
                 //cell.innerHTML += '<span class="strength">5<span>  | <span class="health">50<span>'
-                theImage.setAttribute('strength', 50)
-                theImage.setAttribute('health', 500)
 
             }
-            if (r === 4) {
+            if (r === 2) {
                 // cell.innerHTML = soldier.pieceCode; //just to lable each cell. later this becomes the game pieces
                 // cell.appendChild(theImage)
                 theImage.setAttribute('class', 'battleImage')
                 theImage.setAttribute('alt', 'player1')
-                theImage.src = soldier.pieceCode;
+                theImage.src = p1.pieceCode;
                 theImage.width = "100";
-                theImage.setAttribute('health', 500)
-                theImage.setAttribute('strength', 50)
-
 
             }
-            if (r > 0 && r < 4) {
+            if (r === 1 || r > 2) {
                 theImage.setAttribute('class', 'grassImage')
                 theImage.setAttribute('alt', '')
                 theImage.src = grass;
@@ -169,9 +174,7 @@ let board = document.getElementsByClassName('gameboard')[0];
 let cells = document.querySelectorAll('img')
 
 
-let clickedPiece = null;
 
-let turn = 1
 
 cells.forEach(function (element) {
     element.addEventListener('click', function (elem) {
@@ -197,76 +200,100 @@ function player2Turn(elem) {
     }
 }
 
+let clickedPiece = null;
+let turn = 1
+let neighbors = []
+let fighter;
+let altAttribute;
 
-let middleOfTurn = false;
 
 function movePlayer(elem) {
-    //console.log(elem, turn);
-    middleOfTurn = true;
 
     if (elem.target.className === 'battleImage' && clickedPiece == null) { //and does not equal any other pieces &&& this is one of my neighbots
-        clickedPiece = elem.target.src
-        // //console.log(clickedPiece)
+        clickedPiece = elem.target
+
+                    
+        // console.log(fighter)
+        // fighter = `<img class="battleImage" alt="${elem.target.alt}" src="${elem.target.src}" width="100"></img>`
+
         elem.target.src = grass;
         elem.target.setAttribute('id', 'moving');
         elem.target.setAttribute('class', 'grassImage');
         $('.battleImage').removeAttr('id')
-        $('img').removeAttr('name strength health data')
+        // $('img').removeAttr('name data')
 
-
-        let neighbors = findNeighbors('before') //weird one
-        neighborOptions(neighbors, elem.target)
-   
-        
+        neighbors = findNeighbors('before') //weird one
+        neighborOptions(neighbors, elem.target, elem.target, false)
         elem.target.setAttribute('id', '');
         $('.grassImage').removeAttr('alt');
+
     } else if (elem.target.className !== 'battleImage' && clickedPiece != null && elem.target.className == 'grassImage' && elem.target.getAttribute('name') == 'legal') {
 
         $('img').removeAttr('name')
-        const altAttribute = turn % 2 == 0 ? "player2" : "player1";
         elem.target.src = clickedPiece;
+        altAttribute = turn % 2 == 0 ? "player2" : "player1";
         elem.target.setAttribute('id', 'moving');
         elem.target.setAttribute('class', 'battleImage');
         elem.target.setAttribute('alt', altAttribute);
-        elem.target.setAttribute('strength', '50')
-        elem.target.setAttribute('health', '500')
+
+        //console.log(fighter, elem.target)
+        //elem.target.outerHTML = fighter
         $('.battleImage').removeAttr('data')
 
-        // let neighbors = findNeighbors('after')
+        //neighbors = findNeighbors('after')
         // fightNeighbor(neighbors, elem.target)
         clickedPiece = null;
 
         turn++
+        console.log(altAttribute)
         $("#turn").html(turn)
         // middleOfTurn = false;
-        console.log(turn)
-        console.log("Enemy");
-        
+        //console.log(turn)
+        //console.log("Enemy");
+
     } else {
-        neighborOptions();
+        // console.log(elem.target.data)
+        let random = Math.floor(Math.random() * 2);
+        let winner = random == 0 ? elem.target : fighter;
+        // console.log(elem.target)
+        // console.log(winner);
+        if (winner === fighter) {
+            $(elem.target).replaceWith(fighter);
+        } else {
+            return
+        }
+        turn++
+        // console.log(neighbors)
+
+
+        // // elem.target.parentNode.innerHTML = "";
+        // elem.target.parentNode.innerHTML = winner;
     }
 }
 
-function neighborOptions(neighbors, fighter) {
+function neighborOptions(neighbors, fighter, target, attacking) {
     $('.battleImage').removeAttr('data')
     neighbors.forEach(neighbor => {
         if (neighbor.className == 'battleImage' && neighbor.alt !== fighter.alt) {
             neighbor.setAttribute('data', 'war')
-            battle(neighbors, fighter);
-            
-        }
-        else if (neighbor.className == 'grassImage') {
+            // if (attacking) {
+            //     battle(neighbor, fighter, target);
+            // }
+
+        } else if (neighbor.className == 'grassImage') {
             neighbor.setAttribute('name', 'legal')
-            neighbor.setAttribute('strength', '50')
-            neighbor.setAttribute('health', '500')
         }
     })
 }
 
 
-function battle(neighbor, fighter) {
-    console.log(neighbor, fighter)
-
+function battle(neighbor, fighter, target) {
+    // // console.log(neighbor, fighter, target)
+    // let winner = [neighbor, fighter][Math.round(Math.random())]
+    // // console.log('winner is ', winner)
+    // target.outerHTML = winner.outerHTML;
+    // winner = '';
+    // console.log(winner)
 }
 
 
@@ -297,6 +324,67 @@ function findNeighbors(when) {
     if (activeColumn > 6) {
         actives.push(columns[activeColumn - 5])
     }
-    //console.log(when, 'neighbors are ', actives)
+    console.log(when, 'neighbors are ', actives)
     return actives
 }
+
+
+// if (elem.target.className === 'battleImage' && clickedPiece == null) { //and does not equal any other pieces &&& this is one of my neighbots
+//     clickedPiece = elem.target.src
+//     fighter = $(`<img class="battleImage" alt="${elem.target.alt}" src="${elem.target.src}" width="100"></img>`)[0]
+//     console.log(fighter)
+//     // console.log(fighter)
+//     // fighter = `<img class="battleImage" alt="${elem.target.alt}" src="${elem.target.src}" width="100"></img>`
+
+//     elem.target.src = grass;
+//     elem.target.setAttribute('id', 'moving');
+//     elem.target.setAttribute('class', 'grassImage');
+//     $('.battleImage').removeAttr('id')
+//     // $('img').removeAttr('name data')
+
+//     neighbors = findNeighbors('before') //weird one
+//     neighborOptions(neighbors, elem.target, elem.target, false)
+//     elem.target.setAttribute('id', '');
+//     $('.grassImage').removeAttr('alt');
+// } else if (elem.target.className !== 'battleImage' && clickedPiece != null && elem.target.className == 'grassImage' && elem.target.getAttribute('name') == 'legal') {
+
+//     $('img').removeAttr('name')
+//     elem.target.src = clickedPiece;
+//     altAttribute = turn % 2 == 0 ? "player2" : "player1";
+//     elem.target.setAttribute('id', 'moving');
+//     elem.target.setAttribute('class', 'battleImage');
+//     elem.target.setAttribute('alt', altAttribute);
+
+//     //console.log(fighter, elem.target)
+//     //elem.target.outerHTML = fighter
+//     $('.battleImage').removeAttr('data')
+
+//     //neighbors = findNeighbors('after')
+//     // fightNeighbor(neighbors, elem.target)
+//     clickedPiece = null;
+
+//     turn++
+//     console.log(altAttribute)
+//     $("#turn").html(turn)
+//     // middleOfTurn = false;
+//     //console.log(turn)
+//     //console.log("Enemy");
+// }
+// else {
+//     // console.log(elem.target.data)
+//     let random = Math.floor(Math.random() * 2);
+//     let winner = random == 0 ? elem.target : fighter;
+//     // console.log(elem.target)
+//     // console.log(winner);
+//     if (winner === fighter) {
+//         $(elem.target).replaceWith(fighter);
+//     } else {
+//         return
+//     }
+//     turn++
+//     // console.log(neighbors)
+
+
+//     // // elem.target.parentNode.innerHTML = "";
+//     // elem.target.parentNode.innerHTML = winner;
+// }
