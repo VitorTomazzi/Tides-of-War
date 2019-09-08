@@ -65,10 +65,10 @@ function p2Attack() {
         p2Damage -= p1.armor;
         p1.health -= p2Damage;
         logMessage.innerText = `Player 2 did ${p2Damage} damage to Player 1. Only ${p1.health} health left!`
-        // //console.log(`Player 2 did ${p2Damage} damage to soldier. ${soldier.health} health left!`);
+        // ////console.log(`Player 2 did ${p2Damage} damage to soldier. ${soldier.health} health left!`);
     } else {
         logMessage.innerText = 'Player 2 missed'
-        // //console.log('Player 2 missed')
+        // ////console.log('Player 2 missed')
     }
     printToScreen();
 }
@@ -84,10 +84,10 @@ function p1Attack() {
         p2.health -= p1Damage;
         logMessage.innerText = `Player 1 did ${p1Damage} damage to Player 2. ${p2.health} health left!`
 
-        // //console.log(`Player 1 did ${p1Damage} damage to p2. ${p2.health} health left!`);
+        // ////console.log(`Player 1 did ${p1Damage} damage to p2. ${p2.health} health left!`);
     } else {
         logMessage.innerText = 'Player 1 missed';
-        // //console.log('Player 1 missed')
+        // ////console.log('Player 1 missed')
     }
     printToScreen();
 }
@@ -144,7 +144,7 @@ function createBoard() {
                 //cell.innerHTML += '<span class="strength">5<span>  | <span class="health">50<span>'
 
             }
-            if (r === 2) {
+            if (r === 4) {
                 // cell.innerHTML = soldier.pieceCode; //just to lable each cell. later this becomes the game pieces
                 // cell.appendChild(theImage)
                 theImage.setAttribute('class', 'battleImage')
@@ -155,7 +155,7 @@ function createBoard() {
 
 
             }
-            if (r === 1 || r > 2) {
+            if (r >0 && r < 4) {
                 theImage.setAttribute('class', 'grassImage')
                 theImage.setAttribute('alt', '')
                 theImage.src = grass;
@@ -210,22 +210,37 @@ let cells = document.querySelectorAll('img')
 // }
 
 let clickedPiece = null;
-let turn = 1
+let turn = 0
+$("#turn").html(turn)
 let neighbors = []
 let fighter;
 let altAttribute;
-
+let playersTurn = 'player1'
 
 function movePlayer(elem) {
-    console.log('move plater called',elem.target.src)
+    //console.log('move plater called', elem.target.src)
+    if(turn % 2 === 0) {
+        playersTurn =  'player1'
+    } else {
+        playersTurn =  'player2'
+    }
+    // if(playersTurn != elem.target.alt){
+    //     alert('not your turn')
+    //     return 
+    // }
+    // console.log(playersTurn, elem.target.alt)
 
-    if (elem.target.className === 'battleImage' && clickedPiece == null) { 
+
+    if (elem.target.className === 'battleImage' && clickedPiece == null && elem.target.alt == playersTurn) {
         //You don't have a piece and you click on a piece 
+        // if( elem.target.alt == playersTurn ){
+        //     console.log(playersTurn)
+        // }
 
 
         clickedPiece = elem.target.src
-        console.log(fighter)
-        // console.log(fighter)
+        //console.log(fighter)
+        // //console.log(fighter)
         fighter = `<img class="battleImage" alt="${elem.target.alt}" src="${elem.target.src}" width="100"></img>`
 
         elem.target.src = grass;
@@ -240,19 +255,22 @@ function movePlayer(elem) {
         $('.grassImage').removeAttr('alt');
 
     } else if (
-        elem.target.className !== 'battleImage'  //You clicked grass
-        && clickedPiece != null  //And click peice is not empty
-        && elem.target.className == 'grassImage' //You clicked grass
-        && elem.target.getAttribute('name') == 'legal') { //And the move is a blue square 
+        elem.target.className !== 'battleImage' //You clicked grass
+        &&
+        clickedPiece != null //And click peice is not empty
+        &&
+        elem.target.className == 'grassImage' //You clicked grass
+        &&
+        elem.target.getAttribute('name') == 'legal') { //And the move is a blue square 
 
         $('img').removeAttr('name')
         elem.target.src = clickedPiece;
-        altAttribute = turn % 2 == 0 ? "player2" : "player1";
+        altAttribute = turn % 2 == 0 ? "player1" : "player2";
         elem.target.setAttribute('id', 'moving');
         elem.target.setAttribute('class', 'battleImage');
         elem.target.setAttribute('alt', altAttribute);
 
-        //console.log(fighter, elem.target)
+        ////console.log(fighter, elem.target)
         //elem.target.outerHTML = fighter
         $('.battleImage').removeAttr('data')
 
@@ -261,80 +279,78 @@ function movePlayer(elem) {
         clickedPiece = null;
 
         turn++
-        console.log(altAttribute)
+        // //console.log(altAttribute)
         $("#turn").html(turn)
         // middleOfTurn = false;
-        //console.log(turn)
-        //console.log("Enemy");
+        ////console.log(turn)
+        ////console.log("Enemy");
 
 
-          }  
-          else if(elem.target.getAttribute('data') == 'war') //  We cliked on a red 
-          {
-            
-    
-            // console.log(elem.target.data)
-            let random = Math.floor(Math.random() * 2);
-            let winner = random == 0 ? elem.target : fighter;
-            // console.log(elem.target)
-            console.log('winner ',winner, 'fighter', fighter, 'elem', elem.target);
+    } else if (elem.target.getAttribute('data') == 'war') //  We cliked on a red 
+    {
 
-            turn++
-            $("#turn").html(turn)
-            clickedPiece = null
-            $('.battleImage').removeAttr('data')
-            $('.grassImage').removeAttr('name')
-            
-            
-            if (winner === fighter) { //attack and won
-                //winner.onclick = movePlayer
-                // let img = new Image()
-                // img.innerHTML = winner;
-                // img.id = 'winner'
-                window.winner = $(winner)
-                // <img class="battleImage" alt="player2" src="file:///Users/vitortomazzi/Desktop/IronHack/Projects/rpg/PNG/Warrior.png" width="100"></img>
-                console.log($(winner)[0])
-               
-                
-                
-                elem.target.setAttribute('src', $(winner)[0].getAttribute('src'))
-                elem.target.setAttribute('alt', $(winner)[0].getAttribute('alt'))
 
-                //$(elem.target).replaceWith($(winner)[0])
-                // $('#winner').click(function(e) {
-                //     console.log("PLEASE")
-                //     movePlayer(e)
-                // })
-                //winner.onclick = movePlayer
-                //$(elem.target).replaceWith(fighter);
-            } 
-            else {
-                return
-            }
-            // console.log(neighbors)
-    
-    
-            // // elem.target.parentNode.innerHTML = "";
-            // elem.target.parentNode.innerHTML = winner;
+        // //console.log(elem.target.data)
+        let random = Math.floor(Math.random() * 2);
+        let winner = random == 0 ? elem.target : fighter;
+        // //console.log(elem.target)
+        //console.log('winner ', winner, 'fighter', fighter, 'elem', elem.target);
+
+        turn++
+        $("#turn").html(turn)
+        clickedPiece = null
+        $('.battleImage').removeAttr('data')
+        $('.grassImage').removeAttr('name')
+
+
+        if (winner === fighter) { //attack and won
+            //winner.onclick = movePlayer
+            // let img = new Image()
+            // img.innerHTML = winner;
+            // img.id = 'winner'
+            // window.winner = $(winner)
+            // <img class="battleImage" alt="player2" src="file:///Users/vitortomazzi/Desktop/IronHack/Projects/rpg/PNG/Warrior.png" width="100"></img>
+            //console.log($(winner)[0])
+
+
+
+            elem.target.setAttribute('src', $(winner)[0].getAttribute('src'))
+            elem.target.setAttribute('alt', $(winner)[0].getAttribute('alt'))
+
+            //$(elem.target).replaceWith($(winner)[0])
+            // $('#winner').click(function(e) {
+            //     //console.log("PLEASE")
+            //     movePlayer(e)
+            // })
+            //winner.onclick = movePlayer
+            //$(elem.target).replaceWith(fighter);
         } else {
-            console.log("SOMETHING FRIGGIN ELSE")
+            return
         }
+        // //console.log(neighbors)
+
+
+        // // elem.target.parentNode.innerHTML = "";
+        // elem.target.parentNode.innerHTML = winner;
+    } else {
+        console.log("SOMETHING FRIGGIN ELSE")
+    }
 
     // } else {
     //     //  We think 
 
-    //     // console.log(elem.target.data)
+    //     // //console.log(elem.target.data)
     //     let random = Math.floor(Math.random() * 2);
     //     let winner = random == 0 ? elem.target : fighter;
-    //     // console.log(elem.target)
-    //     console.log(winner);
+    //     // //console.log(elem.target)
+    //     //console.log(winner);
     //     if (winner === fighter) {
     //         //$(elem.target).replaceWith(fighter);
     //     } else {
     //         return
     //     }
     //     turn++
-    //     // console.log(neighbors)
+    //     // //console.log(neighbors)
 
 
     //     // // elem.target.parentNode.innerHTML = "";
@@ -358,26 +374,26 @@ function neighborOptions(neighbors, fighter, target, attacking) {
 }
 
 
-function battle(neighbor, fighter, target) {
-    // // console.log(neighbor, fighter, target)
-    // let winner = [neighbor, fighter][Math.round(Math.random())]
-    // // console.log('winner is ', winner)
-    // target.outerHTML = winner.outerHTML;
-    // winner = '';
-    // console.log(winner)
-}
+// function battle(neighbor, fighter, target) {
+//     // // //console.log(neighbor, fighter, target)
+//     // let winner = [neighbor, fighter][Math.round(Math.random())]
+//     // // //console.log('winner is ', winner)
+//     // target.outerHTML = winner.outerHTML;
+//     // winner = '';
+//     // //console.log(winner)
+// }
 
 
 function findNeighbors(when) {
     let columns = cells;
     let activeColumn;
     columns.forEach((col, i) => {
-        //console.log(col.className, col.id, col.innerHTML)
+        ////console.log(col.className, col.id, col.innerHTML)
         if (col.id == "moving") {
             activeColumn = i;
         }
     })
-    //console.log('active column', activeColumn)
+    ////console.log('active column', activeColumn)
 
     let actives = []
     if ((activeColumn + 1) % 5 !== 0) {
@@ -395,7 +411,7 @@ function findNeighbors(when) {
     if (activeColumn > 6) {
         actives.push(columns[activeColumn - 5])
     }
-    console.log(when, 'neighbors are ', actives)
+    //console.log(when, 'neighbors are ', actives)
     return actives
 }
 
@@ -403,8 +419,8 @@ function findNeighbors(when) {
 // if (elem.target.className === 'battleImage' && clickedPiece == null) { //and does not equal any other pieces &&& this is one of my neighbots
 //     clickedPiece = elem.target.src
 //     fighter = $(`<img class="battleImage" alt="${elem.target.alt}" src="${elem.target.src}" width="100"></img>`)[0]
-//     console.log(fighter)
-//     // console.log(fighter)
+//     //console.log(fighter)
+//     // //console.log(fighter)
 //     // fighter = `<img class="battleImage" alt="${elem.target.alt}" src="${elem.target.src}" width="100"></img>`
 
 //     elem.target.src = grass;
@@ -426,7 +442,7 @@ function findNeighbors(when) {
 //     elem.target.setAttribute('class', 'battleImage');
 //     elem.target.setAttribute('alt', altAttribute);
 
-//     //console.log(fighter, elem.target)
+//     ////console.log(fighter, elem.target)
 //     //elem.target.outerHTML = fighter
 //     $('.battleImage').removeAttr('data')
 
@@ -435,25 +451,25 @@ function findNeighbors(when) {
 //     clickedPiece = null;
 
 //     turn++
-//     console.log(altAttribute)
+//     //console.log(altAttribute)
 //     $("#turn").html(turn)
 //     // middleOfTurn = false;
-//     //console.log(turn)
-//     //console.log("Enemy");
+//     ////console.log(turn)
+//     ////console.log("Enemy");
 // }
 // else {
-//     // console.log(elem.target.data)
+//     // //console.log(elem.target.data)
 //     let random = Math.floor(Math.random() * 2);
 //     let winner = random == 0 ? elem.target : fighter;
-//     // console.log(elem.target)
-//     // console.log(winner);
+//     // //console.log(elem.target)
+//     // //console.log(winner);
 //     if (winner === fighter) {
 //         $(elem.target).replaceWith(fighter);
 //     } else {
 //         return
 //     }
 //     turn++
-//     // console.log(neighbors)
+//     // //console.log(neighbors)
 
 
 //     // // elem.target.parentNode.innerHTML = "";
