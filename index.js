@@ -1,5 +1,3 @@
-
-
 //**************************** */ Pieces/Images ********************************
 
 let warrior = './PNG/Warrior.png';
@@ -131,14 +129,14 @@ function movePlayer(elem) {
 
 
 
-    } else if (elem.target.getAttribute('data') == 'war') //  We cliked on a red 
+    } else if (elem.target.getAttribute('data') == 'war') //  We clicked on a red 
     {
 
 
         let random = Math.floor(Math.random() * 2);
         let winner = random == 0 ? elem.target : fighter;
-        console.log(winner)
-        console.log(fighter)
+        console.log('winner: ', winner)
+        console.log('fighter: ', fighter)
         turn++
         $("#turn").html(turn)
         clickedPiece = null
@@ -151,13 +149,14 @@ function movePlayer(elem) {
             elem.target.setAttribute('alt', $(winner)[0].getAttribute('alt'))
             document.getElementById('log').innerHTML = `Niice, ${$(winner)[0].alt}. Ya got one!!`;
 
-        } else {
+        } else { //attacked and lost
             document.getElementById('log').innerHTML = `Yikes. ${$(elem.target)[0].alt} wrecked you!!`;
             return
         }
-
+        // isGameOver();
+        // document.getElementById('log').innerHTML = "Not your turn or illegal move!";
     } else {
-        console.log("SOMETHING FRIGGIN ELSE")
+        console.log("Not your turn or illegal move")
     }
 
 
@@ -214,6 +213,43 @@ function findNeighbors(when) {
 }
 
 
+
+// ******************************** Game over function ********************************
+
+// loop through each image tag and check if all player1 or player2 alt attributes are gone
+// what if i loop through all cells and push every cell with a player1 or player2 into an empty Array. then check if array is empty. if it is, game over.
+// if not,then empty array.
+
+// function isGameOver() {
+//     // console.log('helloooo');
+//     let board = cells;
+//     board.forEach(el => {
+//         if (el.alt != 'player1' || el.alt != 'player2') {
+//             // its looking for any tile that doesnt have either a p1 or p2 which is all of them... 
+//             // document.location.href = '';
+//             console.log('hiii')
+//         }
+//     })
+// }
+
+// let p1Arr = [];
+// let p2Arr = [];
+// function isPlayer() {
+//     // loops through cells and filters put all images with a filled alt tag... should only be battle images
+//     let battle = Array.from(cells).filter(i => i.alt);
+//     // gets all the player2 tags
+//     battle.forEach(function (elem) {
+//         if (elem.alt === 'player1') {
+//             p1Arr.push(elem);   
+//         } else if (elem.alt === 'player2'){
+//             p2Arr.push(elem); 
+//         }
+//         return
+//     })
+// }
+// isPlayer();
+// console.log(p1Arr)
+// console.log(p2Arr)
 
 //************************************* Ideas for Scalability ***********************************/
 
