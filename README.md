@@ -6,6 +6,7 @@
 </p>
 
 <h3 align="center">Tides of War</h3>
+<h5 align="center">To visit the website <a href="https://vitortomazzi.github.io/Tides-of-War/">CLICK HERE</a></h5>
 <div align="center">
 
   [![Status](https://img.shields.io/badge/status-active-success.svg)]() 
@@ -20,7 +21,6 @@
 <p align="center"> A chance-based, checkers-style board game!
     <br> 
 </p>
-
 
 ## 📝 Table of Contents
 - [About](#about)
