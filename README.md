@@ -30,7 +30,7 @@
 - [Acknowledgments](#acknowledgement)
 
 ## 🧐 About <a name = "about"></a>
-The goal of the project was to practice using Vanilla JS and DOM manipulation to create a role-playing board game. Players take turn moving game pieces (soldiers in yellow, warriors in brown) with the goal of capturing all of your opponents pieces.
+The goal of the project was to use Vanilla JS and DOM manipulation to create a role-playing board game. Players take turn moving game pieces (soldiers in yellow, warriors in brown) with the goal of capturing all of your opponents pieces.
 
 
 ## 🚀 Deployment <a name = "deployment"></a>
